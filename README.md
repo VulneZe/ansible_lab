@@ -507,16 +507,8 @@ atlos-{environnement}-{rôle}-{index}
 
 ## Conclusion
 
-Ce projet est une base solide pour apprendre Ansible avec des bonnes pratiques d'entreprise. N'hésitez pas à :
-
-- Explorer les rôles et les comprendre
-- Modifier les variables dans les inventaires
-- Ajouter de nouveaux rôles pour vos besoins
-- Adapter le projet à votre infrastructure réelle
-- Contribuer avec vos améliorations
-
-Pour toute question ou suggestion, n'hésitez pas à contacter l'équipe DevOps ATLOS : devops@atlos.local
+Ce projet est une base  pour apprendre Ansible avec des bonnes pratiques d'entreprise. 
 
 ---
 
-**Bonne découverte d'Ansible ! 🚀**
+
