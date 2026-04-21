@@ -1,0 +1,30 @@
+# ==============================================================================
+# Handlers du rôle nginx_reverse_proxy
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les handlers pour le rôle nginx_reverse_proxy.
+# Les handlers sont des actions qui ne s'exécutent que lorsqu'une tâche
+# les notifie via le mot-clé "notify".
+#
+# Dans ce rôle, nous avons un handler pour redémarrer nginx après
+# une modification de configuration ou de la page d'accueil.
+#
+# Documentation sur les handlers : https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_handlers.html
+# ==============================================================================
+
+---
+# ------------------------------------------------------------------------------
+# Handler : Redémarrer nginx
+# ------------------------------------------------------------------------------
+# Ce handler redémarre le service nginx.
+# Il est notifié par la tâche de déploiement de la page d'accueil
+# pour que les modifications soient prises en compte.
+#
+# L'utilisation d'un handler plutôt qu'un redémarrage systématique
+# permet d'éviter des redémarrages inutiles si le fichier n'a pas changé.
+- name: Redémarrer nginx
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    state: restarted
+  become: yes

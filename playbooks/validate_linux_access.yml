@@ -1,0 +1,96 @@
+# ==============================================================================
+# Playbook : validate_linux_access.yml
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce playbook valide l'accès aux serveurs Linux en collectant et affichant
+# des informations de base. Il est utile pour vérifier que la connexion SSH
+# fonctionne correctement avant de déployer des configurations.
+#
+# Ce playbook ne modifie rien sur les cibles, il se contente de collecter
+# et d'afficher des informations (read-only).
+# ==============================================================================
+
+---
+- name: Validation de l'accès aux serveurs Linux
+  hosts: linux_servers
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    # ------------------------------------------------------------------------------
+    # 1. Affichage de l'utilisateur effectif
+    # ------------------------------------------------------------------------------
+    # Cette tâche affiche l'utilisateur qui exécute le playbook sur la cible.
+    - name: Affichage de l'utilisateur effectif
+      ansible.builtin.debug:
+        msg:
+          - "Utilisateur Ansible : {{ ansible_user_id }}"
+          - "Utilisateur système : {{ ansible_user }}"
+          - "Utilisateur become : {{ ansible_become_user | default('non utilisé') }}"
+
+    # ------------------------------------------------------------------------------
+    # 2. Affichage du hostname
+    # ------------------------------------------------------------------------------
+    # Cette tâche affiche le hostname de la machine cible.
+    - name: Affichage du hostname
+      ansible.builtin.debug:
+        msg:
+          - "Hostname : {{ ansible_hostname }}"
+          - "FQDN : {{ ansible_fqdn }}"
+          - "Domaine : {{ ansible_domain }}"
+
+    # ------------------------------------------------------------------------------
+    # 3. Affichage des informations système
+    # ------------------------------------------------------------------------------
+    # Cette tâche affiche des informations système de base.
+    - name: Affichage des informations système
+      ansible.builtin.debug:
+        msg:
+          - "Système d'exploitation : {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Famille : {{ ansible_os_family }}"
+          - "Architecture : {{ ansible_architecture }}"
+          - "Kernel : {{ ansible_kernel }}"
+
+    # ------------------------------------------------------------------------------
+    # 4. Affichage des informations réseau
+    # ------------------------------------------------------------------------------
+    # Cette tâche affiche les adresses IP et interfaces réseau principales.
+    - name: Affichage des informations réseau
+      ansible.builtin.debug:
+        msg:
+          - "Adresse IPv4 par défaut : {{ ansible_default_ipv4.address }}"
+          - "Interface par défaut : {{ ansible_default_ipv4.interface }}"
+          - "MAC address : {{ ansible_default_ipv4.macaddress }}"
+
+    # ------------------------------------------------------------------------------
+    # 5. Affichage de la mémoire
+    # ------------------------------------------------------------------------------
+    # Cette tâche affiche les informations de mémoire.
+    - name: Affichage de la mémoire
+      ansible.builtin.debug:
+        msg:
+          - "Mémoire totale : {{ ansible_memtotal_mb }} MB"
+          - "Mémoire libre : {{ ansible_memfree_mb }} MB"
+
+    # ------------------------------------------------------------------------------
+    # 6. Affichage des informations de l'environnement
+    # ------------------------------------------------------------------------------
+    # Cette tâche affiche les variables d'environnement définies dans group_vars.
+    - name: Affichage des informations de l'environnement
+      ansible.builtin.debug:
+        msg:
+          - "Entreprise : {{ company_name | default('non défini') }}"
+          - "Environnement : {{ environment_name | default('non défini') }}"
+          - "Utilisateur admin : {{ admin_user | default('non défini') }}"
+
+    # ------------------------------------------------------------------------------
+    # 7. Vérification de la connexion SSH
+    # ------------------------------------------------------------------------------
+    # Cette tâche confirme que la connexion SSH fonctionne correctement.
+    - name: Vérification de la connexion SSH
+      ansible.builtin.debug:
+        msg:
+          - "Connexion SSH : OK"
+          - "Accès become : OK"
+          - "Collecte des facts : OK"

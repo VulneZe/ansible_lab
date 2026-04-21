@@ -1,0 +1,113 @@
+# ==============================================================================
+# Variables par défaut pour le rôle wazuh_agent
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# IMPORTANT : Ce rôle est une SIMULATION PÉDAGOGIQUE.
+# Une installation réelle de Wazuh Agent nécessite l'ajout des dépôts Wazuh,
+# l'installation des paquets spécifiques, la configuration de l'agent,
+# l'enregistrement auprès du manager, etc.
+#
+# Pour une installation réelle en production, consultez la documentation officielle :
+# https://documentation.wazuh.com/current/deployment-options/deploy-wazuh-agent/index.html
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Configuration de la simulation
+# ------------------------------------------------------------------------------
+# Activer ou désactiver le rôle wazuh_agent.
+wazuh_agent_enabled: true
+
+# Mode d'exécution : simulation ou real.
+# simulation : Installe des paquets de base et crée une configuration exemple.
+# real : Effectue une installation réelle de Wazuh Agent (nécessite adaptation).
+wazuh_agent_mode: simulation
+
+# ------------------------------------------------------------------------------
+# Configuration Wazuh Agent (simulation)
+# ------------------------------------------------------------------------------
+# Version de Wazuh Agent (simulation).
+wazuh_agent_version: "4.7.0"
+
+# Adresse IP ou FQDN du Wazuh Manager.
+wazuh_manager_address: "wazuh-manager.atlos.local"
+
+# Port de communication avec le Wazuh Manager.
+wazuh_manager_port: 1514
+
+# Type d'enregistrement : auto, manual, or force.
+wazuh_registration_mode: "auto"
+
+# Mot de passe d'enregistrement (si requis).
+# EN PRODUCTION : Utiliser Ansible Vault.
+wazuh_registration_password: "{{ vault_wazuh_registration_password | default('') }}"
+
+# ------------------------------------------------------------------------------
+# Paquets à installer (simulation)
+# ------------------------------------------------------------------------------
+# Liste des paquets à installer pour la simulation.
+# En mode real, ces paquets seraient remplacés par les paquets Wazuh réels.
+wazuh_agent_simulation_packages:
+  - curl
+  - wget
+  - gnupg2
+
+# ------------------------------------------------------------------------------
+# Configuration de l'agent (simulation)
+# ------------------------------------------------------------------------------
+# Chemin du fichier de configuration de l'agent.
+wazuh_agent_config_file: "/var/ossec/etc/ossec.conf"
+
+# Répertoire d'installation de Wazuh Agent.
+wazuh_agent_install_dir: "/var/ossec"
+
+# Utilisateur qui exécute l'agent Wazuh.
+wazuh_agent_user: "root"
+
+# Groupe qui exécute l'agent Wazuh.
+wazuh_agent_group: "root"
+
+# ------------------------------------------------------------------------------
+# Configuration du service Wazuh Agent
+# ------------------------------------------------------------------------------
+# Nom du service Wazuh Agent.
+wazuh_agent_service_name: "wazuh-agent"
+
+# État du service (started, stopped, restarted).
+wazuh_agent_service_state: started
+
+# Activer le service au démarrage.
+wazuh_agent_service_enabled: true
+
+# ------------------------------------------------------------------------------
+# Configuration des logs (simulation)
+# ------------------------------------------------------------------------------
+# Répertoire où l'agent stocke ses logs.
+wazuh_agent_log_dir: "/var/ossec/logs"
+
+# Niveau de logging (debug, info, warning, error, critical).
+wazuh_agent_log_level: "info"
+
+# ------------------------------------------------------------------------------
+# Configuration de la surveillance (simulation)
+# ------------------------------------------------------------------------------
+# Activer la surveillance des fichiers.
+wazuh_agent_file_monitoring_enabled: true
+
+# Activer la surveillance des processus.
+wazuh_agent_process_monitoring_enabled: true
+
+# Activer la surveillance du réseau.
+wazuh_agent_network_monitoring_enabled: true
+
+# ------------------------------------------------------------------------------
+# Configuration de la remontée d'alertes
+# ------------------------------------------------------------------------------
+# Intervalle de remontée des alertes (en secondes).
+wazuh_agent_alert_interval: 300
+
+# Activer la remontée des logs système.
+wazuh_agent_syslog_enabled: true
+
+# Activer la remontée des logs d'authentification.
+wazuh_agent_authlog_enabled: true

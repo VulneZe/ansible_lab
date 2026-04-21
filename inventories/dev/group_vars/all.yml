@@ -1,0 +1,92 @@
+# ==============================================================================
+# Variables communes à tous les hôtes de l'environnement DEV
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables qui s'appliquent à TOUS les hôtes
+# de l'environnement de développement.
+#
+# Priorité Ansible : group_vars/all.yml a une priorité faible,
+# ce qui permet de les surcharger facilement dans d'autres fichiers.
+#
+# Documentation sur la priorité des variables : https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Informations générales sur l'entreprise et l'environnement
+# ------------------------------------------------------------------------------
+# Ces variables sont utilisées dans les templates Jinja2 pour personnaliser
+# les fichiers de configuration, les pages web, les messages système, etc.
+company_name: atlos
+environment_name: dev
+environment_display_name: "Développement"
+
+# ------------------------------------------------------------------------------
+# Utilisateur d'administration
+# ------------------------------------------------------------------------------
+# Utilisateur utilisé pour l'escalade de privilèges (become) sur les cibles.
+# Dans ce lab, nous utilisons 'ansible' comme utilisateur de travail.
+admin_user: ansible
+
+# ------------------------------------------------------------------------------
+# Fuseau horaire
+# ------------------------------------------------------------------------------
+# Timezone par défaut pour tous les serveurs de l'environnement.
+# Format : Area/Location (ex: Europe/Paris, America/New_York)
+# Si vide, la timezone du système sera conservée.
+server_timezone: Europe/Paris
+
+# ------------------------------------------------------------------------------
+# Localisation système
+# ------------------------------------------------------------------------------
+# Locale par défaut pour les serveurs.
+# Format : langue_PAYS.encodage (ex: fr_FR.UTF-8, en_US.UTF-8)
+server_locale: fr_FR.UTF-8
+
+# ------------------------------------------------------------------------------
+# Configuration MOTD (Message Of The Day)
+# ------------------------------------------------------------------------------
+# Message affiché lors de la connexion SSH aux serveurs.
+# Utile pour informer les utilisateurs de l'environnement et des règles.
+motd_enabled: true
+motd_message: |
+  ================================================================================
+  ATLOS - Environnement de Développement
+  ================================================================================
+  
+  Ce serveur fait partie de l'environnement de développement ATLOS.
+  
+  - Ne stockez PAS de données sensibles ou de production sur cette machine.
+  - Les modifications peuvent être écrasées à tout moment.
+  - Pour toute question, contactez l'équipe DevOps.
+  
+  ================================================================================
+
+# ------------------------------------------------------------------------------
+# Configuration de la journalisation
+# ------------------------------------------------------------------------------
+# Niveau de verbosité pour les logs applicatifs (si applicable).
+# Valeurs : debug, info, warning, error, critical
+log_level: info
+
+# ------------------------------------------------------------------------------
+# Configuration du pare-feu (si applicable)
+# ------------------------------------------------------------------------------
+# Ports SSH autorisés (en plus du port 22 par défaut)
+firewall_allowed_ssh_ports:
+  - 22
+
+# ------------------------------------------------------------------------------
+# Monitoring et alerting
+# ------------------------------------------------------------------------------
+# Indique si le monitoring est activé dans cet environnement.
+monitoring_enabled: false
+monitoring_server: ""
+
+# ------------------------------------------------------------------------------
+# Sauvegardes
+# ------------------------------------------------------------------------------
+# Indique si les sauvegardes sont activées dans cet environnement.
+backup_enabled: false
+backup_schedule: ""
+backup_retention_days: 7

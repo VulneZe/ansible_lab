@@ -1,0 +1,81 @@
+# ==============================================================================
+# Variables communes à tous les hôtes de l'environnement PROD
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables qui s'appliquent à TOUS les hôtes
+# de l'environnement de production.
+#
+# IMPORTANT : En production, toutes les configurations doivent être
+# validées en staging avant déploiement. Les secrets DOIVENT être
+# chiffrés avec Ansible Vault.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Informations générales sur l'entreprise et l'environnement
+# ------------------------------------------------------------------------------
+company_name: atlos
+environment_name: prod
+environment_display_name: "Production"
+
+# ------------------------------------------------------------------------------
+# Utilisateur d'administration
+# ------------------------------------------------------------------------------
+admin_user: ansible
+
+# ------------------------------------------------------------------------------
+# Fuseau horaire
+# ------------------------------------------------------------------------------
+server_timezone: Europe/Paris
+
+# ------------------------------------------------------------------------------
+# Localisation système
+# ------------------------------------------------------------------------------
+server_locale: fr_FR.UTF-8
+
+# ------------------------------------------------------------------------------
+# Configuration MOTD (Message Of The Day)
+# ------------------------------------------------------------------------------
+motd_enabled: true
+motd_message: |
+  ================================================================================
+  ATLOS - Environnement de PRODUCTION
+  ================================================================================
+  
+  Ce serveur fait partie de l'environnement de production ATLOS.
+  
+  - Toutes les actions sont journalisées et auditées.
+  - Les modifications doivent être validées via le processus de déploiement.
+  - En cas d'incident, contactez immédiatement l'équipe Ops : ops@atlos.local
+  - L'accès non autorisé est strictement interdit et sanctionné.
+  
+  ================================================================================
+
+# ------------------------------------------------------------------------------
+# Configuration de la journalisation
+# ------------------------------------------------------------------------------
+log_level: error  # Niveau le plus strict en production
+
+# ------------------------------------------------------------------------------
+# Configuration du pare-feu
+# ------------------------------------------------------------------------------
+firewall_allowed_ssh_ports:
+  - 22
+
+# ------------------------------------------------------------------------------
+# Monitoring et alerting
+# ------------------------------------------------------------------------------
+# En production, le monitoring est obligatoire avec alertes actives.
+monitoring_enabled: true
+monitoring_server: "monitoring.atlos.local"
+alerting_enabled: true
+alerting_email: "alerts@atlos.local"
+
+# ------------------------------------------------------------------------------
+# Sauvegardes
+# ------------------------------------------------------------------------------
+# Sauvegardes complètes et testées en production.
+backup_enabled: true
+backup_schedule: "daily"
+backup_retention_days: 90
+backup_encryption_enabled: true

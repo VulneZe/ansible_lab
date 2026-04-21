@@ -1,0 +1,125 @@
+# ==============================================================================
+# Variables pour le groupe linux_servers - Environnement DEV
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables spécifiques aux serveurs Linux
+# de l'environnement de développement.
+#
+# Ces variables s'appliquent à tous les hôtes du groupe [linux_servers]
+# et ses sous-groupes (comme [wazuh_managers]).
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Paquets de base pour les serveurs Linux (baseline)
+# ------------------------------------------------------------------------------
+# Liste des paquets à installer sur tous les serveurs Linux.
+# Ces paquets sont des outils d'administration courants et essentiels.
+#
+# Note : Les noms de paquets doivent correspondre à ceux de votre distribution.
+# Pour Debian/Ubuntu : apt, pour RHEL/CentOS : yum/dnf
+linux_baseline_packages:
+  # Outils réseau et transfert de fichiers
+  - curl
+  - wget
+  - rsync
+  
+  # Éditeurs de texte
+  - vim
+  - nano
+  
+  # Outils de surveillance et de diagnostic
+  - htop
+  - iotop
+  - net-tools
+  - traceroute
+  
+  # Outils de développement
+  - git
+  - unzip
+  - zip
+  
+  # Outils système
+  - tmux
+  - screen
+  - tree
+  - jq
+  
+  # Utilitaires divers
+  - ca-certificates
+  - apt-transport-https  # Pour Debian/Ubuntu
+  - software-properties-common  # Pour Debian/Ubuntu
+
+# ------------------------------------------------------------------------------
+# Configuration SSH
+# ------------------------------------------------------------------------------
+# Port SSH personnalisé (si différent de 22).
+# Si vide, le port 22 par défaut est utilisé.
+ssh_port: 22
+
+# Autoriser/interdire l'authentification par mot de passe.
+# false = uniquement par clé SSH (recommandé en production)
+# true = mot de passe et clé SSH (acceptable en dev)
+ssh_password_authentication: true
+
+# Autoriser/interdire la connexion root directe.
+# false = interdit (recommandé)
+# true = autorisé (déconseillé)
+ssh_permit_root_login: false
+
+# ------------------------------------------------------------------------------
+# Configuration du système
+# ------------------------------------------------------------------------------
+# Limite maximale de fichiers ouverts (ulimit -n)
+# Utile pour les serveurs qui gèrent beaucoup de connexions.
+ulimit_nofile: 65536
+
+# Limite maximale de processus par utilisateur
+ulimit_nproc: 4096
+
+# ------------------------------------------------------------------------------
+# Configuration du pare-feu (UFW pour Debian/Ubuntu)
+# ------------------------------------------------------------------------------
+# Activer ou désactiver le pare-feu.
+firewall_enabled: false
+
+# Ports supplémentaires à ouvrir (en plus du port SSH)
+firewall_allowed_ports:
+  - 80    # HTTP
+  - 443   # HTTPS
+
+# ------------------------------------------------------------------------------
+# Configuration NTP (synchronisation de l'heure)
+# ------------------------------------------------------------------------------
+# Activer ou désactiver la synchronisation NTP.
+ntp_enabled: true
+
+# Serveurs NTP à utiliser (serveurs publics par défaut)
+ntp_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+
+# ------------------------------------------------------------------------------
+# Configuration des logs
+# ------------------------------------------------------------------------------
+# Répertoire où sont stockés les logs applicatifs.
+log_directory: /var/log/apps
+
+# Rotation des logs (si logrotate est utilisé)
+logrotate_enabled: true
+logrotate_retention_days: 30
+
+# ------------------------------------------------------------------------------
+# Configuration SELinux (si applicable)
+# ------------------------------------------------------------------------------
+# Mode SELinux : enforcing, permissive, disabled
+# Remarque : SELinux est principalement utilisé sur RHEL/CentOS/Fedora
+selinux_mode: disabled
+
+# ------------------------------------------------------------------------------
+# Configuration AppArmor (si applicable)
+# ------------------------------------------------------------------------------
+# AppArmor est principalement utilisé sur Debian/Ubuntu
+apparmor_enabled: true

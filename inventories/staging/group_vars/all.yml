@@ -1,0 +1,75 @@
+# ==============================================================================
+# Variables communes à tous les hôtes de l'environnement STAGING
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables qui s'appliquent à TOUS les hôtes
+# de l'environnement de staging (pré-production).
+#
+# En staging, les configurations sont proches de la production.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Informations générales sur l'entreprise et l'environnement
+# ------------------------------------------------------------------------------
+company_name: atlos
+environment_name: staging
+environment_display_name: "Staging (Pré-production)"
+
+# ------------------------------------------------------------------------------
+# Utilisateur d'administration
+# ------------------------------------------------------------------------------
+admin_user: ansible
+
+# ------------------------------------------------------------------------------
+# Fuseau horaire
+# ------------------------------------------------------------------------------
+server_timezone: Europe/Paris
+
+# ------------------------------------------------------------------------------
+# Localisation système
+# ------------------------------------------------------------------------------
+server_locale: fr_FR.UTF-8
+
+# ------------------------------------------------------------------------------
+# Configuration MOTD (Message Of The Day)
+# ------------------------------------------------------------------------------
+motd_enabled: true
+motd_message: |
+  ================================================================================
+  ATLOS - Environnement de Staging (Pré-production)
+  ================================================================================
+  
+  Ce serveur fait partie de l'environnement de staging ATLOS.
+  
+  - Les données sont des données de test, PAS de production.
+  - Les changements sont validés ici avant déploiement en production.
+  - Signalez toute anomalie à l'équipe DevOps.
+  
+  ================================================================================
+
+# ------------------------------------------------------------------------------
+# Configuration de la journalisation
+# ------------------------------------------------------------------------------
+log_level: warning  # Plus strict qu'en dev
+
+# ------------------------------------------------------------------------------
+# Configuration du pare-feu
+# ------------------------------------------------------------------------------
+firewall_allowed_ssh_ports:
+  - 22
+
+# ------------------------------------------------------------------------------
+# Monitoring et alerting
+# ------------------------------------------------------------------------------
+# En staging, le monitoring est activé pour valider les configurations.
+monitoring_enabled: true
+monitoring_server: "monitoring.atlos.local"
+
+# ------------------------------------------------------------------------------
+# Sauvegardes
+# ------------------------------------------------------------------------------
+# Sauvegardes limitées en staging (données de test).
+backup_enabled: true
+backup_schedule: "daily"
+backup_retention_days: 7

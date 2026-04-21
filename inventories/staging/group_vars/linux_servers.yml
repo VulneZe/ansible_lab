@@ -1,0 +1,93 @@
+# ==============================================================================
+# Variables pour le groupe linux_servers - Environnement STAGING
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables spécifiques aux serveurs Linux
+# de l'environnement de staging.
+#
+# En staging, les configurations sont proches de la production
+# pour valider les changements avant déploiement.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Paquets de base pour les serveurs Linux (baseline)
+# ------------------------------------------------------------------------------
+# Même liste qu'en dev, mais nous pourrions avoir des différences
+# si certains paquets ne sont nécessaires qu'en staging.
+linux_baseline_packages:
+  - curl
+  - wget
+  - rsync
+  - vim
+  - nano
+  - htop
+  - iotop
+  - net-tools
+  - traceroute
+  - git
+  - unzip
+  - zip
+  - tmux
+  - screen
+  - tree
+  - jq
+  - ca-certificates
+  - apt-transport-https
+  - software-properties-common
+
+# ------------------------------------------------------------------------------
+# Configuration SSH
+# ------------------------------------------------------------------------------
+ssh_port: 22
+
+# En staging, nous recommandons de désactiver l'authentification par mot de passe
+# pour se rapprocher des pratiques de production.
+ssh_password_authentication: false
+
+ssh_permit_root_login: false
+
+# ------------------------------------------------------------------------------
+# Configuration du système
+# ------------------------------------------------------------------------------
+ulimit_nofile: 65536
+ulimit_nproc: 4096
+
+# ------------------------------------------------------------------------------
+# Configuration du pare-feu (UFW pour Debian/Ubuntu)
+# ------------------------------------------------------------------------------
+# En staging, le pare-feu est activé pour simuler la production.
+firewall_enabled: true
+
+firewall_allowed_ports:
+  - 80
+  - 443
+
+# ------------------------------------------------------------------------------
+# Configuration NTP
+# ------------------------------------------------------------------------------
+ntp_enabled: true
+
+ntp_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+
+# ------------------------------------------------------------------------------
+# Configuration des logs
+# ------------------------------------------------------------------------------
+log_directory: /var/log/apps
+
+logrotate_enabled: true
+logrotate_retention_days: 30
+
+# ------------------------------------------------------------------------------
+# Configuration SELinux
+# ------------------------------------------------------------------------------
+selinux_mode: disabled
+
+# ------------------------------------------------------------------------------
+# Configuration AppArmor
+# ------------------------------------------------------------------------------
+apparmor_enabled: true

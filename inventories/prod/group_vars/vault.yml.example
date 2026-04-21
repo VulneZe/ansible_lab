@@ -1,0 +1,58 @@
+# ==============================================================================
+# Exemple de fichier Vault pour l'environnement PROD
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# IMPORTANT : Ce fichier est un EXEMPLE pour montrer la structure.
+# NE JAMAIS UTILISER ces valeurs en production.
+#
+# EN PRODUCTION :
+# 1. Utilisez des mots de passe forts et uniques (générateur de mots de passe)
+# 2. Chiffrez ce fichier avec Ansible Vault
+# 3. Stockez le mot de passe du Vault dans un gestionnaire de secrets sécurisé
+# 4. Appliquez les politiques de rotation des secrets de votre entreprise
+#
+# Pour créer le vrai fichier vault.yml :
+# 1. Copiez ce fichier : cp vault.yml.example vault.yml
+# 2. Modifiez les valeurs avec vos vrais secrets
+# 3. Chiffrez-le : ansible-vault encrypt inventories/prod/group_vars/vault.yml
+# 4. Exécutez les playbooks avec : ansible-playbook ... --ask-vault-pass
+#
+# Documentation Ansible Vault : https://docs.ansible.com/ansible/latest/vault_guide/
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Secrets Wazuh
+# ------------------------------------------------------------------------------
+# MOTS DE PASSE PRODUCTION - DOIVENT ÊTRE FORTS ET UNIQUES
+vault_wazuh_api_password: "CHANGEZ_MOI_MOT_DE_PASSE_FORT_ET_UNIQUE_PRODUCTION"
+vault_wazuh_encryption_key: "CHANGEZ_MOI_CLE_CHIFFREMENT_FORT_ET_UNIQUE_PRODUCTION"
+
+# ------------------------------------------------------------------------------
+# Secrets de base de données
+# ------------------------------------------------------------------------------
+vault_db_root_password: "CHANGEZ_MOI_MOT_DE_PASSE_ROOT_DB_FORT_ET_UNIQUE_PRODUCTION"
+vault_db_user_password: "CHANGEZ_MOI_MOT_DE_PASSE_USER_DB_FORT_ET_UNIQUE_PRODUCTION"
+
+# ------------------------------------------------------------------------------
+# Secrets de communication
+# ------------------------------------------------------------------------------
+vault_proxy_password: "CHANGEZ_MOI_MOT_DE_PASSE_PROXY_FORT_ET_UNIQUE_PRODUCTION"
+vault_external_api_key: "CHANGEZ_MOI_CLE_API_FORT_ET_UNIQUE_PRODUCTION"
+
+# ------------------------------------------------------------------------------
+# Secrets d'administration système
+# ------------------------------------------------------------------------------
+vault_linux_local_admin_password: "CHANGEZ_MOI_MOT_DE_PASSE_ADMIN_FORT_ET_UNIQUE_PRODUCTION"
+vault_ssh_private_key: ""
+
+# ------------------------------------------------------------------------------
+# Secrets d'application
+# ------------------------------------------------------------------------------
+vault_auth_token: "CHANGEZ_MOI_JETON_AUTH_FORT_ET_UNIQUE_PRODUCTION"
+vault_encryption_key: "CHANGEZ_MOI_CLE_CHIFFREMENT_FORT_ET_UNIQUE_PRODUCTION"
+
+# ------------------------------------------------------------------------------
+# Secrets de sauvegarde
+# ------------------------------------------------------------------------------
+vault_backup_encryption_key: "CHANGEZ_MOI_CLE_CHIFFREMENT_SAUVEGARDE_FORT_ET_UNIQUE_PRODUCTION"

@@ -1,0 +1,72 @@
+# ==============================================================================
+# Playbook : site.yml
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce playbook est le playbook d'orchestration global du projet.
+# Il enchaîne tous les rôles dans l'ordre logique pour déployer
+# l'infrastructure complète sur les serveurs Linux.
+#
+# Ordre d'exécution :
+# 1. common_linux - Configuration de base (paquets, MOTD, timezone, etc.)
+# 2. nginx_reverse_proxy - Déploiement du serveur web
+# 3. wazuh_agent - Déploiement de l'agent de sécurité (simulation)
+#
+# Ce playbook est idéal pour un déploiement complet ou une mise à jour
+# de l'ensemble de l'infrastructure.
+# ==============================================================================
+
+---
+- name: Orchestration globale du projet ATLOS ansible-lab
+  hosts: linux_servers
+  become: yes
+  gather_facts: yes
+
+  roles:
+    # ------------------------------------------------------------------------------
+    # Étape 1 : Configuration de base Linux
+    # ------------------------------------------------------------------------------
+    # Ce rôle configure les éléments de base communs à tous les serveurs Linux.
+    # Il doit être exécuté en premier car il prépare l'environnement pour les
+    # autres rôles (installation de paquets de base, configuration système, etc.).
+    - role: common_linux
+
+    # ------------------------------------------------------------------------------
+    # Étape 2 : Déploiement de nginx (uniquement sur wazuh_managers)
+    # ------------------------------------------------------------------------------
+    # Ce rôle déploie nginx comme serveur web.
+    # Il n'est appliqué que sur les hôtes du groupe wazuh_managers.
+    # Les autres hôtes ignorent ce rôle grâce à la condition when.
+    - role: nginx_reverse_proxy
+      when: "'wazuh_managers' in group_names"
+
+    # ------------------------------------------------------------------------------
+    # Étape 3 : Déploiement de l'agent Wazuh (simulation)
+    # ------------------------------------------------------------------------------
+    # Ce rôle simule l'installation et la configuration de l'agent Wazuh.
+    # Il est appliqué à tous les serveurs Linux pour la collecte de logs
+    # et d'événements de sécurité.
+    #
+    # ATTENTION : Ce rôle est une simulation pédagogique.
+    # Pour une installation réelle, adaptez le rôle selon la documentation Wazuh.
+    - role: wazuh_agent
+
+  post_tasks:
+    # ------------------------------------------------------------------------------
+    # Tâches finales de validation
+    # ------------------------------------------------------------------------------
+    # Ces tâches sont exécutées après tous les rôles pour valider le déploiement.
+    - name: Affichage du résumé du déploiement
+      ansible.builtin.debug:
+        msg:
+          - "=========================================="
+          - "Déploiement ATLOS ansible-lab terminé"
+          - "=========================================="
+          - "Hôte : {{ inventory_hostname }}"
+          - "Environnement : {{ environment_name | default('non défini') }}"
+          - "Entreprise : {{ company_name | default('non défini') }}"
+          - "Rôles appliqués :"
+          - "  - common_linux : OK"
+          - "  - nginx_reverse_proxy : {% if 'wazuh_managers' in group_names %}OK{% else %}N/A (non applicable){% endif %}"
+          - "  - wazuh_agent : OK (simulation)"
+          - "=========================================="

@@ -1,0 +1,172 @@
+# ==============================================================================
+# .gitignore pour le projet ATLOS ansible-lab
+# ==============================================================================
+#
+# Ce fichier définit les fichiers et répertoires que Git doit ignorer.
+# IMPORTANT : .gitignore ne s'applique qu'aux fichiers NON SUIVIS.
+# Si un secret a déjà été commité, il faut le retirer de l'historique.
+#
+# Documentation : https://git-scm.com/docs/gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Secrets et données sensibles
+# ------------------------------------------------------------------------------
+# Clés privées SSH
+*.pem
+*.key
+*.p12
+*.pfx
+id_*
+id_rsa
+id_ed25519
+id_ecdsa
+
+# Certificats
+*.crt
+*.cer
+*.der
+
+# Fichiers de mots de passe Ansible Vault
+.vault_pass
+vault_pass.txt
+password.txt
+secrets.yml
+
+# Fichiers Vault chiffrés (non commités, uniquement les .example)
+inventories/*/group_vars/vault.yml
+
+# Fichiers de configuration contenant des secrets
+# (commenter si votre config ne contient pas de secrets)
+# .ssh/config
+# ~/.ssh/config
+
+# ------------------------------------------------------------------------------
+# Artefacts Ansible
+# ------------------------------------------------------------------------------
+# Fichiers de retry après échec de playbook
+*.retry
+
+# Cache Ansible
+.ansible/
+ansible_facts/
+
+# Collections téléchargées
+collections/
+galaxy_roles/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# ------------------------------------------------------------------------------
+# Éditeurs et fichiers temporaires
+# ------------------------------------------------------------------------------
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+auto-save-list
+tramp
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ------------------------------------------------------------------------------
+# Logs et fichiers de traces
+# ------------------------------------------------------------------------------
+*.log
+*.log.*
+logs/
+
+# ------------------------------------------------------------------------------
+# Fichiers de sauvegarde temporaires
+# ------------------------------------------------------------------------------
+*.bak
+*.backup
+*.tmp
+*.temp
+
+# ------------------------------------------------------------------------------
+# Fichiers générés par des outils
+# ------------------------------------------------------------------------------
+# Terraform (si utilisé)
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+
+# Docker (si utilisé)
+docker-compose.override.yml
+
+# ------------------------------------------------------------------------------
+# Fichiers spécifiques à l'environnement local
+# ------------------------------------------------------------------------------
+# Variables d'environnement locales
+.env
+.env.local
+.env.*.local
+
+# Configuration locale
+local_config.yml
+local_vars.yml
+
+# ------------------------------------------------------------------------------
+# Documentation générée
+# ------------------------------------------------------------------------------
+# Si vous générez de la documentation automatiquement
+docs/_build/
+docs/.doctrees/
+
+# ------------------------------------------------------------------------------
+# Tests et coverage
+# ------------------------------------------------------------------------------
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# ------------------------------------------------------------------------------
+# Fichiers spécifiques au projet
+# ------------------------------------------------------------------------------
+# Ajoutez ici des fichiers spécifiques à votre projet
+# Exemple : fichiers de configuration locale non versionnés
+# local_config/

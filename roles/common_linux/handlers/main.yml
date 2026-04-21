@@ -1,0 +1,24 @@
+# ==============================================================================
+# Handlers du rôle common_linux
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les handlers pour le rôle common_linux.
+# Les handlers sont des actions qui ne s'exécutent que lorsqu'une tâche
+# les notifie via le mot-clé "notify". Ils sont typiquement utilisés
+# pour redémarrer des services après une modification de configuration.
+#
+# Pour le rôle common_linux, nous n'avons pas besoin de handlers pour l'instant
+# car nous ne gérons pas de services spécifiques. Ce fichier est vide mais
+# conservé pour la structure standard d'un rôle Ansible.
+#
+# Documentation sur les handlers : https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_handlers.html
+# ==============================================================================
+
+---
+# Exemple de handler (non utilisé dans ce rôle mais pédagogique)
+# - name: Redémarrer le service cron
+#   ansible.builtin.service:
+#     name: cron
+#     state: restarted
+#   become: yes

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ nginx_index_title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        p.message {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .info-value {
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+        
+        .badge-dev {
+            background: #28a745;
+            color: white;
+        }
+        
+        .badge-staging {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .badge-prod {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .badge-unknown {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ nginx_index_title }}</h1>
+        <p class="message">{{ nginx_index_message }}</p>
+        
+        <div class="info-box">
+            <div class="info-item">
+                <span class="info-label">Entreprise</span>
+                <span class="info-value">{{ nginx_company_name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Environnement</span>
+                <span class="info-value">{{ nginx_environment_name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Serveur</span>
+                <span class="info-value">{{ nginx_server_fqdn }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Adresse IP</span>
+                <span class="info-value">{{ ansible_default_ipv4.address }}</span>
+            </div>
+        </div>
+        
+        {% if nginx_environment_name == 'dev' %}
+        <span class="badge badge-dev">Développement</span>
+        {% elif nginx_environment_name == 'staging' %}
+        <span class="badge badge-staging">Staging</span>
+        {% elif nginx_environment_name == 'prod' %}
+        <span class="badge badge-prod">Production</span>
+        {% else %}
+        <span class="badge badge-unknown">{{ nginx_environment_name }}</span>
+        {% endif %}
+        
+        <div class="footer">
+            <p>Déployé automatiquement par Ansible - {{ ansible_date_time.iso8601 }}</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+# ==============================================================================
+# Playbook : deploy_nginx_reverse_proxy.yml
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce playbook déploie nginx comme serveur web sur les serveurs Wazuh Manager.
+# Il appelle le rôle nginx_reverse_proxy qui installe nginx et déploie une
+# page d'accueil personnalisée.
+#
+# Ce playbook est typiquement utilisé pour les serveurs qui hébergent des
+# services web ou des interfaces de gestion.
+# ==============================================================================
+
+---
+- name: Déploiement de nginx sur les serveurs Wazuh Manager
+  hosts: wazuh_managers
+  become: yes
+  gather_facts: yes
+
+  roles:
+    # ------------------------------------------------------------------------------
+    # Rôle : nginx_reverse_proxy
+    # ------------------------------------------------------------------------------
+    # Ce rôle installe et configure nginx :
+    # - Installation du paquet nginx
+    # - Configuration du répertoire racine
+    # - Déploiement d'une page d'accueil HTML personnalisée (template Jinja2)
+    # - Gestion du service nginx (démarrage, activation)
+    # - Vérification de la configuration nginx
+    #
+    # Les variables sont définies dans group_vars/wazuh_managers.yml et peuvent
+    # être surchargées dans group_vars/all.yml ou host_vars.
+    #
+    # La page d'accueil est personnalisée selon l'environnement (dev, staging, prod)
+    # avec un badge de couleur différent pour chaque environnement.
+    - role: nginx_reverse_proxy

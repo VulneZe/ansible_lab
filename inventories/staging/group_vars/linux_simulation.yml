@@ -1,0 +1,68 @@
+# ==============================================================================
+# Variables pour le groupe linux_simulation - Environnement STAGING
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables spécifiques aux machines de simulation
+# de l'environnement de staging (Kali Linux pour tests de sécurité).
+#
+# Ces machines servent à simuler des scénarios d'attaque, de pentesting,
+# ou de validation de configurations de sécurité.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Configuration spécifique aux machines de simulation
+# ------------------------------------------------------------------------------
+# Type de machine : kali, ubuntu, centos, etc.
+simulation_machine_type: kali
+
+# But de la simulation : security_testing, pentesting, validation, etc.
+simulation_purpose: security_testing
+
+# ------------------------------------------------------------------------------
+# Outils de sécurité (simulation)
+# ------------------------------------------------------------------------------
+# Liste des outils de sécurité supplémentaires à installer.
+# NOTE : Kali Linux a déjà la plupart de ces outils préinstallés.
+# Cette liste est pédagogique pour montrer comment on pourrait
+# ajouter des outils spécifiques sur une autre distribution.
+security_tools_packages:
+  - nmap
+  - wireshark
+  - metasploit-framework
+  - burpsuite
+  - sqlmap
+  - nikto
+
+# ------------------------------------------------------------------------------
+# Configuration réseau pour simulation
+# ------------------------------------------------------------------------------
+# Activer le mode promiscuous pour les tests réseau.
+network_promiscuous_mode: false
+
+# Configuration du firewall pour permettre les scans (en simulation uniquement).
+simulation_firewall_permissive: false
+
+# ------------------------------------------------------------------------------
+# Configuration des logs de simulation
+# ------------------------------------------------------------------------------
+# Répertoire pour stocker les résultats des tests de sécurité.
+simulation_results_directory: /opt/security_tests
+
+# Activer la journalisation détaillée des commandes de sécurité.
+simulation_detailed_logging: true
+
+# ------------------------------------------------------------------------------
+# Configuration de l'environnement de test
+# ------------------------------------------------------------------------------
+# Variables d'environnement pour les outils de sécurité.
+simulation_environment_vars:
+  PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
+  TERM: "xterm-256color"
+
+# ------------------------------------------------------------------------------
+# Configuration des snapshots/restauration
+# ------------------------------------------------------------------------------
+# En staging/simulation, nous pourrions vouloir restaurer
+# la machine à un état propre après chaque test.
+simulation_auto_restore: false

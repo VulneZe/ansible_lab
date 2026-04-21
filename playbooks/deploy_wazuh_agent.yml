@@ -1,0 +1,39 @@
+# ==============================================================================
+# Playbook : deploy_wazuh_agent.yml
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce playbook déploie l'agent Wazuh sur les serveurs Linux.
+# Il appelle le rôle wazuh_agent qui simule l'installation et la configuration
+# d'un agent Wazuh.
+#
+# IMPORTANT : Ce rôle est une SIMULATION PÉDAGOGIQUE.
+# Pour une installation réelle, il faut adapter le rôle selon la documentation Wazuh.
+#
+# Ce playbook est utilisé pour déployer des agents de sécurité sur les serveurs
+# afin de collecter des logs et des événements de sécurité.
+# ==============================================================================
+
+---
+- name: Déploiement de l'agent Wazuh (simulation)
+  hosts: linux_servers
+  become: yes
+  gather_facts: yes
+
+  roles:
+    # ------------------------------------------------------------------------------
+    # Rôle : wazuh_agent
+    # ------------------------------------------------------------------------------
+    # Ce rôle simule l'installation et la configuration de l'agent Wazuh :
+    # - Installation des paquets de base nécessaires pour Wazuh
+    # - Création du répertoire d'installation Wazuh
+    # - Création du répertoire de logs
+    # - Création d'un fichier de configuration exemple (ossec.conf)
+    #
+    # Les variables sont définies dans group_vars/linux_servers.yml et peuvent
+    # être surchargées dans group_vars/all.yml ou host_vars.
+    #
+    # ATTENTION : Ce rôle est une simulation pédagogique.
+    # Pour une installation réelle, consultez la documentation Wazuh :
+    # https://documentation.wazuh.com/current/deployment-options/deploy-wazuh-agent/index.html
+    - role: wazuh_agent

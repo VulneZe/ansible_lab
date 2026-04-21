@@ -1,0 +1,218 @@
+# ==============================================================================
+# Tâches du rôle wazuh_agent
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# IMPORTANT : Ce rôle est une SIMULATION PÉDAGOGIQUE.
+# Une installation réelle de Wazuh Agent nécessite :
+# - L'ajout des dépôts Wazuh officiels
+# - L'installation des paquets wazuh-agent
+# - La configuration de l'agent (ossec.conf)
+# - L'enregistrement auprès du Wazuh Manager
+# - La gestion du service wazuh-agent
+#
+# Pour une installation réelle en production, consultez la documentation officielle :
+# https://documentation.wazuh.com/current/deployment-options/deploy-wazuh-agent/index.html
+# ==============================================================================
+
+---
+# ------------------------------------------------------------------------------
+# 1. Vérification du mode d'exécution
+# ------------------------------------------------------------------------------
+# Cette tâche affiche le mode d'exécution (simulation ou real).
+- name: Affichage du mode d'exécution
+  ansible.builtin.debug:
+    msg:
+      - "Rôle wazuh_agent en mode : {{ wazuh_agent_mode }}"
+      - "ATTENTION : Mode simulation = installation pédagogique, pas d'agent Wazuh réel"
+
+# ------------------------------------------------------------------------------
+# 2. Installation des paquets de base (simulation)
+# ------------------------------------------------------------------------------
+# En mode simulation, nous installons des paquets de base qui seraient
+# nécessaires pour une installation réelle de Wazuh Agent.
+# En mode real, cette tâche serait remplacée par l'installation des paquets Wazuh.
+- name: Installation des paquets de base (simulation)
+  ansible.builtin.apt:
+    name: "{{ wazuh_agent_simulation_packages }}"
+    state: present
+    update_cache: yes
+  when:
+    - ansible_os_family == "Debian"
+    - wazuh_agent_mode == "simulation"
+    - wazuh_agent_enabled | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 3. Installation réelle de Wazuh Agent (mode real - à adapter)
+# ------------------------------------------------------------------------------
+# Cette tâche est un exemple de ce que serait une installation réelle.
+# Elle est désactivée par défaut et doit être adaptée selon la documentation Wazuh.
+- name: Installation réelle de Wazuh Agent (mode real - à adapter)
+  ansible.builtin.debug:
+    msg:
+      - "Mode real non implémenté dans cette version pédagogique"
+      - "Pour une installation réelle, consultez : https://documentation.wazuh.com/"
+  when:
+    - wazuh_agent_mode == "real"
+    - wazuh_agent_enabled | bool
+
+# # Exemple d'installation réelle (commenté, à adapter) :
+# - name: Ajout du dépôt Wazuh (Debian/Ubuntu)
+#   ansible.builtin.apt_repository:
+#     repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+#     state: present
+#   when: ansible_os_family == "Debian"
+#   become: yes
+#
+# - name: Import de la clé GPG Wazuh
+#   ansible.builtin.apt_key:
+#     url: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+#     state: present
+#   when: ansible_os_family == "Debian"
+#   become: yes
+#
+# - name: Installation de wazuh-agent
+#   ansible.builtin.apt:
+#     name: wazuh-agent
+#     state: present
+#     update_cache: yes
+#   when: ansible_os_family == "Debian"
+#   become: yes
+
+# ------------------------------------------------------------------------------
+# 4. Création du répertoire d'installation (simulation)
+# ------------------------------------------------------------------------------
+# En mode simulation, nous créons le répertoire où Wazuh Agent serait installé.
+# Cela permet de montrer la structure sans installer le logiciel réel.
+- name: Création du répertoire d'installation (simulation)
+  ansible.builtin.file:
+    path: "{{ wazuh_agent_install_dir }}"
+    state: directory
+    owner: "{{ wazuh_agent_user }}"
+    group: "{{ wazuh_agent_group }}"
+    mode: '0755'
+  when:
+    - wazuh_agent_mode == "simulation"
+    - wazuh_agent_enabled | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 5. Création du répertoire de logs (simulation)
+# ------------------------------------------------------------------------------
+# En mode simulation, nous créons le répertoire où Wazuh Agent stockerait ses logs.
+- name: Création du répertoire de logs (simulation)
+  ansible.builtin.file:
+    path: "{{ wazuh_agent_log_dir }}"
+    state: directory
+    owner: "{{ wazuh_agent_user }}"
+    group: "{{ wazuh_agent_group }}"
+    mode: '0755'
+  when:
+    - wazuh_agent_mode == "simulation"
+    - wazuh_agent_enabled | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 6. Création d'un fichier de configuration exemple (simulation)
+# ------------------------------------------------------------------------------
+# En mode simulation, nous créons un fichier de configuration exemple
+# pour montrer à quoi ressemblerait ossec.conf.
+- name: Création du fichier de configuration exemple (simulation)
+  ansible.builtin.copy:
+    content: |
+      <!--
+        Fichier de configuration Wazuh Agent (SIMULATION PÉDAGOGIQUE)
+        Ce fichier est un exemple et ne doit PAS être utilisé en production.
+        
+        Pour une configuration réelle, consultez la documentation :
+        https://documentation.wazuh.com/current/deployment-options/deploy-wazuh-agent/index.html
+      -->
+      <ossec_config>
+        <client>
+          <server>
+            <address>{{ wazuh_manager_address }}</address>
+            <port>{{ wazuh_manager_port }}</port>
+            <protocol>tcp</protocol>
+          </server>
+          <config>
+            <auto_enrollment>
+              <enabled>yes</enabled>
+              <agent_name>{{ inventory_hostname }}</agent_name>
+              <groups>linux,servers</groups>
+            </auto_enrollment>
+          </config>
+        </client>
+        
+        <!-- Configuration de la surveillance des fichiers -->
+        <syscheck>
+          <disabled>no</disabled>
+          <frequency>3600</frequency>
+          <directories check_all="yes">/etc,/usr/bin,/usr/sbin</directories>
+        </syscheck>
+        
+        <!-- Configuration de la surveillance des processus -->
+        <rootcheck>
+          <disabled>no</disabled>
+          <check_files>/etc/passwd,/etc/shadow</check_files>
+        </rootcheck>
+        
+        <!-- Configuration de la remontée des logs système -->
+        <localfile>
+          <log_format>syslog</log_format>
+          <location>/var/log/syslog</location>
+        </localfile>
+        
+        <!-- Configuration de la remontée des logs d'authentification -->
+        <localfile>
+          <log_format>syslog</log_format>
+          <location>/var/log/auth.log</location>
+        </localfile>
+      </ossec_config>
+    dest: "{{ wazuh_agent_config_file }}"
+    owner: "{{ wazuh_agent_user }}"
+    group: "{{ wazuh_agent_group }}"
+    mode: '0644'
+  when:
+    - wazuh_agent_mode == "simulation"
+    - wazuh_agent_enabled | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 7. Gestion du service Wazuh Agent (simulation)
+# ------------------------------------------------------------------------------
+# En mode simulation, nous n'essayons pas de gérer un service qui n'existe pas.
+# En mode real, cette tâche gérerait le service wazuh-agent.
+- name: Gestion du service Wazuh Agent (simulation)
+  ansible.builtin.debug:
+    msg:
+      - "Service Wazuh Agent non géré en mode simulation"
+      - "En mode real, le service serait démarré et activé"
+  when:
+    - wazuh_agent_mode == "simulation"
+    - wazuh_agent_enabled | bool
+
+# # Exemple de gestion du service (commenté, pour mode real) :
+# - name: Démarrage et activation du service Wazuh Agent
+#   ansible.builtin.service:
+#     name: "{{ wazuh_agent_service_name }}"
+#     state: "{{ wazuh_agent_service_state }}"
+#     enabled: "{{ wazuh_agent_service_enabled }}"
+#   when:
+#     - wazuh_agent_mode == "real"
+#     - wazuh_agent_enabled | bool
+#   become: yes
+
+# ------------------------------------------------------------------------------
+# 8. Affichage d'un résumé
+# ------------------------------------------------------------------------------
+# Cette tâche affiche un résumé de la configuration appliquée.
+- name: Affichage du résumé de configuration
+  ansible.builtin.debug:
+    msg:
+      - "Rôle wazuh_agent appliqué (mode simulation)"
+      - "Manager Wazuh : {{ wazuh_manager_address }}:{{ wazuh_manager_port }}"
+      - "Répertoire d'installation : {{ wazuh_agent_install_dir }}"
+      - "Fichier de configuration : {{ wazuh_agent_config_file }}"
+      - "ATTENTION : Ceci est une simulation pédagogique"
+      - "Pour une installation réelle, adaptez le rôle selon la documentation Wazuh"

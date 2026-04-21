@@ -1,0 +1,162 @@
+# ==============================================================================
+# Tâches du rôle common_linux
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce rôle configure les éléments de base communs à tous les serveurs Linux.
+# Il installe les paquets de base, configure le MOTD, la timezone, etc.
+#
+# Ce rôle est conçu pour être idempotent : peut être exécuté plusieurs fois
+# sans effets secondaires indésirables.
+# ==============================================================================
+
+---
+# ------------------------------------------------------------------------------
+# 1. Mise à jour du cache des paquets (Debian/Ubuntu)
+# ------------------------------------------------------------------------------
+# Cette tâche met à jour le cache APT pour s'assurer que les paquets
+# installés sont les dernières versions disponibles.
+# Note : Cette tâche est spécifique aux distributions basées sur Debian/Ubuntu.
+# Pour RHEL/CentOS, il faudrait utiliser le module yum ou dnf.
+- name: Mise à jour du cache APT
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600  # Cache valide pendant 1 heure
+  when:
+    - ansible_os_family == "Debian"
+    - common_linux_install_packages | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 2. Installation des paquets de base
+# ------------------------------------------------------------------------------
+# Cette tâche installe la liste des paquets définis dans common_linux_packages.
+# Le module apt est idempotent : si le paquet est déjà installé, il ne fait rien.
+- name: Installation des paquets de base
+  ansible.builtin.apt:
+    name: "{{ common_linux_packages }}"
+    state: present
+  when:
+    - ansible_os_family == "Debian"
+    - common_linux_install_packages | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 3. Configuration du MOTD (Message Of The Day)
+# ------------------------------------------------------------------------------
+# Le MOTD est affiché lors de la connexion SSH.
+# Nous utilisons un template pour personnaliser le message selon l'environnement.
+- name: Configuration du MOTD
+  ansible.builtin.copy:
+    content: "{{ common_linux_motd_message }}"
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: '0644'
+  when: common_linux_motd_enabled | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 4. Configuration de la timezone
+# ------------------------------------------------------------------------------
+# Cette tâche configure la timezone système.
+# La commande timedatectl est utilisée sur les systèmes modernes.
+- name: Configuration de la timezone
+  ansible.builtin.command:
+    cmd: timedatectl set-timezone {{ common_linux_timezone }}
+  when:
+    - common_linux_timezone_enabled | bool
+    - common_linux_timezone is defined
+  become: yes
+  changed_when: false  # timedatectl ne retourne pas toujours un changement détectable
+
+# ------------------------------------------------------------------------------
+# 5. Configuration de la locale
+# ------------------------------------------------------------------------------
+# Cette tâche configure la locale système.
+# Elle utilise le module locale_gen pour générer la locale si nécessaire.
+- name: Génération de la locale
+  community.general.locale_gen:
+    name: "{{ common_linux_locale }}"
+    state: present
+  when:
+    - common_linux_locale_enabled | bool
+    - common_linux_locale is defined
+  become: yes
+
+- name: Configuration de la locale par défaut
+  ansible.builtin.command:
+    cmd: update-locale LANG={{ common_linux_locale }}
+  when:
+    - common_linux_locale_enabled | bool
+    - common_linux_locale is defined
+  become: yes
+  changed_when: false
+
+# ------------------------------------------------------------------------------
+# 6. Configuration des limites système (ulimit)
+# ------------------------------------------------------------------------------
+# Cette tâche configure les ulimits pour l'utilisateur root.
+# En production, vous voudrez peut-être configurer cela pour d'autres utilisateurs.
+- name: Configuration des ulimits pour root
+  ansible.builtin.copy:
+    content: |
+      # Configuration des limites système pour root
+      * soft nofile {{ common_linux_ulimit_nofile }}
+      * hard nofile {{ common_linux_ulimit_nofile }}
+      * soft nproc {{ common_linux_ulimit_nproc }}
+      * hard nproc {{ common_linux_ulimit_nproc }}
+    dest: /etc/security/limits.d/99-common-linux.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when:
+    - common_linux_ulimit_enabled | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 7. Création du répertoire de logs
+# ------------------------------------------------------------------------------
+# Cette tâche crée le répertoire où les applications stockeront leurs logs.
+- name: Création du répertoire de logs
+  ansible.builtin.file:
+    path: "{{ common_linux_log_directory }}"
+    state: directory
+    owner: "{{ common_linux_log_directory_owner }}"
+    group: "{{ common_linux_log_directory_group }}"
+    mode: "{{ common_linux_log_directory_mode }}"
+  when: common_linux_log_directory_enabled | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 8. Configuration des alias bash globaux
+# ------------------------------------------------------------------------------
+# Cette tâche configure des alias bash utiles pour tous les utilisateurs.
+# Les alias sont placés dans /etc/profile.d/ pour être chargés automatiquement.
+- name: Configuration des alias bash globaux
+  ansible.builtin.copy:
+    content: |
+      # Alias bash communs pour ATLOS
+      {% for alias, command in common_linux_bash_aliases.items() %}
+      alias {{ alias }}='{{ command }}'
+      {% endfor %}
+    dest: /etc/profile.d/common-linux-aliases.sh
+    owner: root
+    group: root
+    mode: '0644'
+  when: common_linux_bash_aliases_enabled | bool
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 9. Affichage d'un résumé
+# ------------------------------------------------------------------------------
+# Cette tâche affiche un résumé de la configuration appliquée.
+# Utile pour le dépannage et la vérification.
+- name: Affichage du résumé de configuration
+  ansible.builtin.debug:
+    msg:
+      - "Rôle common_linux appliqué avec succès"
+      - "Paquets installés : {{ common_linux_packages | length }}"
+      - "Timezone : {{ common_linux_timezone }}"
+      - "Locale : {{ common_linux_locale }}"
+      - "Répertoire de logs : {{ common_linux_log_directory }}"

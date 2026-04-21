@@ -1,0 +1,93 @@
+# ==============================================================================
+# Tâches du rôle nginx_reverse_proxy
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce rôle installe et configure nginx comme reverse proxy simple.
+# Il déploie une page d'accueil personnalisée via un template Jinja2.
+#
+# Ce rôle est conçu pour être idempotent : peut être exécuté plusieurs fois
+# sans effets secondaires indésirables.
+# ==============================================================================
+
+---
+# ------------------------------------------------------------------------------
+# 1. Installation du paquet nginx
+# ------------------------------------------------------------------------------
+# Cette tâche installe nginx si ce n'est pas déjà fait.
+# Le module apt est idempotent : si le paquet est déjà installé, il ne fait rien.
+- name: Installation de nginx
+  ansible.builtin.apt:
+    name: "{{ nginx_package_name }}"
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 2. Création du répertoire racine nginx
+# ------------------------------------------------------------------------------
+# Cette tâche s'assure que le répertoire racine nginx existe.
+# Si le répertoire existe déjà, la tâche ne fait rien (idempotent).
+- name: Création du répertoire racine nginx
+  ansible.builtin.file:
+    path: "{{ nginx_root }}"
+    state: directory
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_group }}"
+    mode: '0755'
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 3. Déploiement de la page d'accueil personnalisée
+# ------------------------------------------------------------------------------
+# Cette tâche déploie la page index.html via le template Jinja2.
+# Le module template est idempotent : le fichier n'est modifié que si
+# le contenu a changé. Si le contenu change, le handler est notifié.
+- name: Déploiement de la page d'accueil personnalisée
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ nginx_index_dest }}"
+    owner: "{{ nginx_index_owner }}"
+    group: "{{ nginx_index_group }}"
+    mode: "{{ nginx_index_mode }}"
+  become: yes
+  notify: Redémarrer nginx
+
+# ------------------------------------------------------------------------------
+# 4. Configuration du service nginx
+# ------------------------------------------------------------------------------
+# Cette tâche s'assure que nginx est démarré et activé au démarrage.
+# Le module service est idempotent : si le service est déjà dans l'état
+# souhaité, il ne fait rien.
+- name: Démarrage et activation du service nginx
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    state: "{{ nginx_service_state }}"
+    enabled: "{{ nginx_service_enabled }}"
+  become: yes
+
+# ------------------------------------------------------------------------------
+# 5. Vérification de la configuration nginx
+# ------------------------------------------------------------------------------
+# Cette tâche vérifie que la configuration nginx est valide.
+# Utile pour détecter les erreurs de configuration avant redémarrage.
+- name: Vérification de la configuration nginx
+  ansible.builtin.command:
+    cmd: nginx -t
+  become: yes
+  changed_when: false
+  register: nginx_config_check
+
+# ------------------------------------------------------------------------------
+# 6. Affichage des informations de déploiement
+# ------------------------------------------------------------------------------
+# Cette tâche affiche les informations utiles pour vérifier le déploiement.
+- name: Affichage des informations de déploiement
+  ansible.builtin.debug:
+    msg:
+      - "Rôle nginx_reverse_proxy appliqué avec succès"
+      - "Page d'accueil : http://{{ ansible_default_ipv4.address }}:{{ nginx_listen_port }}"
+      - "Titre de la page : {{ nginx_index_title }}"
+      - "Environnement : {{ nginx_environment_name }}"
+      - "Entreprise : {{ nginx_company_name }}"

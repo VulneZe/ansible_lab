@@ -1,0 +1,42 @@
+# ==============================================================================
+# Handlers du rôle wazuh_agent
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# IMPORTANT : Ce rôle est une SIMULATION PÉDAGOGIQUE.
+# Les handlers sont des actions qui ne s'exécutent que lorsqu'une tâche
+# les notifie via le mot-clé "notify".
+#
+# En mode simulation, nous n'avons pas de service réel à gérer,
+# mais ce fichier est conservé pour la structure standard d'un rôle Ansible.
+#
+# Pour une installation réelle, vous auriez ici des handlers pour
+# redémarrer le service wazuh-agent après une modification de configuration.
+#
+# Documentation sur les handlers : https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_handlers.html
+# ==============================================================================
+
+---
+# ------------------------------------------------------------------------------
+# Handler : Redémarrer wazuh-agent (mode real - à adapter)
+# ------------------------------------------------------------------------------
+# Ce handler serait utilisé en mode real pour redémarrer le service Wazuh Agent
+# après une modification de configuration.
+- name: Redémarrer wazuh-agent
+  ansible.builtin.service:
+    name: "{{ wazuh_agent_service_name }}"
+    state: restarted
+  become: yes
+  when: wazuh_agent_mode == "real"
+
+# ------------------------------------------------------------------------------
+# Handler : Recharger wazuh-agent (mode real - à adapter)
+# ------------------------------------------------------------------------------
+# Ce handler serait utilisé en mode real pour recharger la configuration
+# du service Wazuh Agent sans redémarrage complet.
+- name: Recharger wazuh-agent
+  ansible.builtin.service:
+    name: "{{ wazuh_agent_service_name }}"
+    state: reloaded
+  become: yes
+  when: wazuh_agent_mode == "real"

@@ -1,0 +1,52 @@
+# ==============================================================================
+# Exemple de fichier Vault pour l'environnement STAGING
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# IMPORTANT : Ce fichier est un EXEMPLE pour montrer la structure.
+# NE PAS UTILISER ces valeurs en production.
+#
+# Pour créer le vrai fichier vault.yml :
+# 1. Copiez ce fichier : cp vault.yml.example vault.yml
+# 2. Modifiez les valeurs avec vos vrais secrets
+# 3. Chiffrez-le : ansible-vault encrypt inventories/staging/group_vars/vault.yml
+# 4. Exécutez les playbooks avec : ansible-playbook ... --ask-vault-pass
+#
+# Documentation Ansible Vault : https://docs.ansible.com/ansible/latest/vault_guide/
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Secrets Wazuh
+# ------------------------------------------------------------------------------
+vault_wazuh_api_password: "changeme_wazuh_api_password_staging"
+vault_wazuh_encryption_key: "changeme_wazuh_encryption_key_staging"
+
+# ------------------------------------------------------------------------------
+# Secrets de base de données
+# ------------------------------------------------------------------------------
+vault_db_root_password: "changeme_db_root_password_staging"
+vault_db_user_password: "changeme_db_user_password_staging"
+
+# ------------------------------------------------------------------------------
+# Secrets de communication
+# ------------------------------------------------------------------------------
+vault_proxy_password: "changeme_proxy_password_staging"
+vault_external_api_key: "changeme_external_api_key_staging"
+
+# ------------------------------------------------------------------------------
+# Secrets d'administration système
+# ------------------------------------------------------------------------------
+vault_linux_local_admin_password: "changeme_local_admin_password_staging"
+vault_ssh_private_key: ""
+
+# ------------------------------------------------------------------------------
+# Secrets d'application
+# ------------------------------------------------------------------------------
+vault_auth_token: "changeme_auth_token_staging"
+vault_encryption_key: "changeme_encryption_key_staging"
+
+# ------------------------------------------------------------------------------
+# Secrets spécifiques à la simulation
+# ------------------------------------------------------------------------------
+# Clés pour les outils de sécurité (si applicable)
+vault_simulation_api_key: "changeme_simulation_api_key_staging"

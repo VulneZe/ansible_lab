@@ -1,0 +1,108 @@
+# ==============================================================================
+# Variables par défaut pour le rôle common_linux
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables par défaut pour le rôle common_linux.
+# Ces variables ont une précédence faible et peuvent être facilement surchargées
+# dans les inventaires (group_vars) ou les playbooks.
+#
+# Documentation sur la précédence des variables : https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Installation des paquets de base
+# ------------------------------------------------------------------------------
+# Activer ou désactiver l'installation des paquets de base.
+common_linux_install_packages: true
+
+# Liste des paquets à installer (peut être surchargée dans group_vars).
+common_linux_packages:
+  - curl
+  - wget
+  - rsync
+  - vim
+  - nano
+  - htop
+  - iotop
+  - net-tools
+  - traceroute
+  - git
+  - unzip
+  - zip
+  - tmux
+  - screen
+  - tree
+  - jq
+
+# ------------------------------------------------------------------------------
+# Configuration du MOTD (Message Of The Day)
+# ------------------------------------------------------------------------------
+# Activer ou désactiver la configuration du MOTD.
+common_linux_motd_enabled: "{{ motd_enabled | default(false) }}"
+
+# Message MOTD personnalisé.
+common_linux_motd_message: "{{ motd_message | default('') }}"
+
+# ------------------------------------------------------------------------------
+# Configuration de la timezone
+# ------------------------------------------------------------------------------
+# Activer ou désactiver la configuration de la timezone.
+common_linux_timezone_enabled: true
+
+# Timezone à configurer (ex: Europe/Paris, America/New_York).
+common_linux_timezone: "{{ server_timezone | default('Europe/Paris') }}"
+
+# ------------------------------------------------------------------------------
+# Configuration de la locale
+# ------------------------------------------------------------------------------
+# Activer ou désactiver la configuration de la locale.
+common_linux_locale_enabled: true
+
+# Locale à configurer (ex: fr_FR.UTF-8, en_US.UTF-8).
+common_linux_locale: "{{ server_locale | default('fr_FR.UTF-8') }}"
+
+# ------------------------------------------------------------------------------
+# Configuration des limites système (ulimit)
+# ------------------------------------------------------------------------------
+# Activer ou désactiver la configuration des ulimits.
+common_linux_ulimit_enabled: false
+
+# Limite maximale de fichiers ouverts.
+common_linux_ulimit_nofile: "{{ ulimit_nofile | default(65536) }}"
+
+# Limite maximale de processus par utilisateur.
+common_linux_ulimit_nproc: "{{ ulimit_nproc | default(4096) }}"
+
+# ------------------------------------------------------------------------------
+# Configuration du répertoire de logs
+# ------------------------------------------------------------------------------
+# Activer ou désactiver la création du répertoire de logs.
+common_linux_log_directory_enabled: true
+
+# Répertoire où sont stockés les logs applicatifs.
+common_linux_log_directory: "{{ log_directory | default('/var/log/apps') }}"
+
+# Propriétaire du répertoire de logs.
+common_linux_log_directory_owner: root
+
+# Groupe du répertoire de logs.
+common_linux_log_directory_group: root
+
+# Permissions du répertoire de logs (mode octal).
+common_linux_log_directory_mode: '0755'
+
+# ------------------------------------------------------------------------------
+# Configuration des alias bash pour les utilisateurs
+# ------------------------------------------------------------------------------
+# Activer ou désactiver la configuration des alias.
+common_linux_bash_aliases_enabled: true
+
+# Liste des alias à créer pour tous les utilisateurs.
+common_linux_bash_aliases:
+  ll: 'ls -lah'
+  la: 'ls -A'
+  l: 'ls -CF'
+  grep: 'grep --color=auto'
+  egrep: 'egrep --color=auto'
+  fgrep: 'fgrep --color=auto'

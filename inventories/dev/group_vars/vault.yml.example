@@ -1,0 +1,94 @@
+# ==============================================================================
+# Exemple de fichier Vault pour l'environnement DEV
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# IMPORTANT : Ce fichier est un EXEMPLE pour montrer la structure.
+# NE PAS UTILISER ces valeurs en production.
+#
+# Pour créer le vrai fichier vault.yml :
+# 1. Copiez ce fichier : cp vault.yml.example vault.yml
+# 2. Modifiez les valeurs avec vos vrais secrets
+# 3. Chiffrez-le : ansible-vault encrypt inventories/dev/group_vars/vault.yml
+# 4. Exécutez les playbooks avec : ansible-playbook ... --ask-vault-pass
+#
+# Documentation Ansible Vault : https://docs.ansible.com/ansible/latest/vault_guide/
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Secrets Wazuh
+# ------------------------------------------------------------------------------
+# Mot de passe de l'API Wazuh Manager.
+# EN PRODUCTION : Utilisez un mot de passe fort et unique.
+vault_wazuh_api_password: "changeme_wazuh_api_password_dev"
+
+# Clé de chiffrement pour les communications Wazuh (si applicable).
+vault_wazuh_encryption_key: "changeme_wazuh_encryption_key_dev"
+
+# ------------------------------------------------------------------------------
+# Secrets de base de données (si applicable)
+# ------------------------------------------------------------------------------
+# Mot de passe root de la base de données Wazuh (indexer).
+vault_db_root_password: "changeme_db_root_password_dev"
+
+# Mot de passe utilisateur de la base de données Wazuh.
+vault_db_user_password: "changeme_db_user_password_dev"
+
+# ------------------------------------------------------------------------------
+# Secrets de communication
+# ------------------------------------------------------------------------------
+# Mot de passe pour le proxy (si un proxy est utilisé).
+vault_proxy_password: "changeme_proxy_password_dev"
+
+# Clé API pour des services externes (si applicable).
+vault_external_api_key: "changeme_external_api_key_dev"
+
+# ------------------------------------------------------------------------------
+# Secrets d'administration système
+# ------------------------------------------------------------------------------
+# Mot de passe utilisateur local (si nécessaire).
+vault_linux_local_admin_password: "changeme_local_admin_password_dev"
+
+# Clé SSH privée pour l'accès à des ressources externes (si applicable).
+# Note : En général, les clés SSH ne sont pas stockées dans Vault mais
+# dans ~/.ssh/ avec les permissions appropriées.
+vault_ssh_private_key: ""
+
+# ------------------------------------------------------------------------------
+# Secrets d'application
+# ------------------------------------------------------------------------------
+# Jetons d'authentification pour des services tiers.
+vault_auth_token: "changeme_auth_token_dev"
+
+# Clés de chiffrement pour des données sensibles.
+vault_encryption_key: "changeme_encryption_key_dev"
+
+# ------------------------------------------------------------------------------
+# Instructions pour chiffrer ce fichier
+# ------------------------------------------------------------------------------
+#
+# 1. Copiez ce fichier :
+#    cp inventories/dev/group_vars/vault.yml.example inventories/dev/group_vars/vault.yml
+#
+# 2. Éditez le fichier avec vos vrais secrets :
+#    nano inventories/dev/group_vars/vault.yml
+#
+# 3. Chiffrez le fichier avec Ansible Vault :
+#    ansible-vault encrypt inventories/dev/group_vars/vault.yml
+#
+#    Vous serez invité à entrer un mot de passe pour le Vault.
+#    CONSERVEZ CE MOT DE PASSE EN SÉCURITÉ.
+#
+# 4. Pour exécuter un playbook avec Vault :
+#    ansible-playbook playbooks/site.yml -i inventories/dev --ask-vault-pass
+#
+# 5. Pour modifier un fichier Vault déjà chiffré :
+#    ansible-vault edit inventories/dev/group_vars/vault.yml
+#
+# 6. Pour déchiffrer temporairement (lecture seule) :
+#    ansible-vault view inventories/dev/group_vars/vault.yml
+#
+# 7. Pour déchiffrer définitivement (non recommandé) :
+#    ansible-vault decrypt inventories/dev/group_vars/vault.yml
+#
+# ==============================================================================

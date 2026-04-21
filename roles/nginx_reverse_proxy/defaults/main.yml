@@ -1,0 +1,70 @@
+# ==============================================================================
+# Variables par défaut pour le rôle nginx_reverse_proxy
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables par défaut pour le rôle nginx_reverse_proxy.
+# Ces variables peuvent être surchargées dans les inventaires (group_vars).
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Configuration nginx
+# ------------------------------------------------------------------------------
+# Nom du paquet nginx (peut varier selon la distribution).
+nginx_package_name: nginx
+
+# Nom du service nginx (peut varier selon la distribution).
+nginx_service_name: nginx
+
+# Port d'écoute HTTP.
+nginx_listen_port: 80
+
+# Port d'écoute HTTPS (si SSL activé).
+nginx_https_port: 443
+
+# Activer ou désactiver SSL/TLS.
+nginx_ssl_enabled: false
+
+# Chemin vers le répertoire racine nginx.
+nginx_root: /var/www/html
+
+# Utilisateur qui exécute nginx.
+nginx_user: www-data
+
+# Groupe qui exécute nginx.
+nginx_group: www-data
+
+# ------------------------------------------------------------------------------
+# Page d'accueil personnalisée (template Jinja2)
+# ------------------------------------------------------------------------------
+# Ces variables sont utilisées dans le template index.html.j2
+# pour personnaliser la page d'accueil nginx.
+nginx_index_title: "{{ nginx_index_title | default('ATLOS - Serveur Nginx') }}"
+nginx_index_message: "{{ nginx_index_message | default('Ce serveur est géré par Ansible') }}"
+nginx_company_name: "{{ company_name | default('ATLOS') }}"
+nginx_environment_name: "{{ environment_name | default('unknown') }}"
+nginx_server_fqdn: "{{ inventory_hostname }}"
+
+# ------------------------------------------------------------------------------
+# Configuration de la page index.html
+# ------------------------------------------------------------------------------
+# Chemin de destination pour la page index.html.
+nginx_index_dest: "{{ nginx_root }}/index.html"
+
+# Propriétaire du fichier index.html.
+nginx_index_owner: "{{ nginx_user }}"
+
+# Groupe du fichier index.html.
+nginx_index_group: "{{ nginx_group }}"
+
+# Permissions du fichier index.html (mode octal).
+nginx_index_mode: '0644'
+
+# ------------------------------------------------------------------------------
+# Configuration du service nginx
+# ------------------------------------------------------------------------------
+# État du service nginx (started, stopped, restarted).
+nginx_service_state: started
+
+# Activer nginx au démarrage (enabled, disabled).
+nginx_service_enabled: true

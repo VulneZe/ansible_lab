@@ -1,0 +1,117 @@
+# ==============================================================================
+# Variables pour le groupe wazuh_managers - Environnement DEV
+# Entreprise : ATLOS
+# ==============================================================================
+#
+# Ce fichier contient les variables spécifiques aux serveurs Wazuh Manager
+# de l'environnement de développement.
+#
+# Wazuh est une solution de sécurité open-source (SIEM/XDR).
+# Ces variables configurent le comportement de nginx et Wazuh sur ces serveurs.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Configuration Nginx
+# ------------------------------------------------------------------------------
+# Port sur lequel nginx écoute.
+nginx_listen_port: 80
+
+# Port HTTPS (si SSL est activé).
+nginx_https_port: 443
+
+# Activer ou désactiver SSL/TLS.
+nginx_ssl_enabled: false
+
+# Chemin vers le répertoire racine nginx.
+nginx_root: /var/www/html
+
+# Utilisateur qui exécute nginx.
+nginx_user: www-data
+
+# Groupe qui exécute nginx.
+nginx_group: www-data
+
+# ------------------------------------------------------------------------------
+# Page d'accueil personnalisée (template Jinja2)
+# ------------------------------------------------------------------------------
+# Ces variables sont utilisées dans le template index.html.j2
+# pour personnaliser la page d'accueil nginx.
+nginx_index_title: "ATLOS - Serveur de Développement Wazuh"
+nginx_index_message: "Ce serveur héberge Wazuh Manager dans l'environnement de développement ATLOS."
+nginx_company_name: "{{ company_name }}"
+nginx_environment_name: "{{ environment_name }}"
+nginx_server_fqdn: "wazuh-dev.atlos.local"
+
+# ------------------------------------------------------------------------------
+# Configuration Wazuh Manager
+# ------------------------------------------------------------------------------
+# IMPORTANT : Ces variables sont une SIMULATION PÉDAGOGIQUE.
+# Une installation réelle de Wazuh nécessite l'ajout des dépôts Wazuh,
+# l'installation des paquets spécifiques, la configuration de l'indexer, etc.
+#
+# Pour une installation réelle en production, consultez la documentation officielle :
+# https://documentation.wazuh.com/current/deployment-options/deploy-wazuh-manager/index.html
+
+# Activer ou désactiver l'installation de Wazuh Manager.
+wazuh_manager_enabled: true
+
+# Version de Wazuh à installer (simulation).
+wazuh_version: "4.7.0"
+
+# Port de l'API Wazuh.
+wazuh_api_port: 55000
+
+# Port du dashboard Wazuh.
+wazuh_dashboard_port: 443
+
+# Utilisateur administrateur Wazuh (SIMULATION - ne pas utiliser en production).
+# EN PRODUCTION : Utiliser Ansible Vault pour chiffrer ce mot de passe.
+wazuh_api_user: admin
+wazuh_api_password: "{{ vault_wazuh_api_password | default('changeme_in_production') }}"
+
+# ------------------------------------------------------------------------------
+# Configuration de l'indexer Wazuh (Elasticsearch/OpenSearch)
+# ------------------------------------------------------------------------------
+# Port de l'indexer.
+wazuh_indexer_port: 9200
+
+# Cluster name pour l'indexer.
+wazuh_indexer_cluster_name: wazuh-cluster
+
+# ------------------------------------------------------------------------------
+# Configuration du Filebeat (agent de log)
+# ------------------------------------------------------------------------------
+# Activer Filebeat sur le manager pour collecter les logs locaux.
+wazuh_filebeat_enabled: true
+
+# ------------------------------------------------------------------------------
+# Configuration de la réplication des données
+# ------------------------------------------------------------------------------
+# En dev, nous n'avons qu'un seul manager.
+# En prod, vous pourriez avoir plusieurs managers en cluster.
+wazuh_cluster_enabled: false
+wazuh_cluster_nodes: []
+
+# ------------------------------------------------------------------------------
+# Configuration de la rétention des logs
+# ------------------------------------------------------------------------------
+# Durée de rétention des logs Wazuh (en jours).
+wazuh_log_retention_days: 30
+
+# ------------------------------------------------------------------------------
+# Configuration des alertes
+# ------------------------------------------------------------------------------
+# Activer ou désactiver les alertes par email.
+wazuh_email_alerts_enabled: false
+
+# Adresse email pour les alertes (si activé).
+wazuh_alert_email: "security@atlos.local"
+
+# ------------------------------------------------------------------------------
+# Configuration des règles de détection
+# ------------------------------------------------------------------------------
+# Niveau de sensibilité des règles (1-15, plus élevé = plus sensible).
+wazuh_rule_level: 7
+
+# Activer les règles de compliance CIS.
+wazuh_cis_rules_enabled: true
