@@ -20,7 +20,7 @@ wazuh_agent_enabled: true
 # Configuration Wazuh Agent
 # ------------------------------------------------------------------------------
 # Version de Wazuh Agent.
-wazuh_agent_version: "4.7.0"
+wazuh_agent_version: "4.14.4"
 
 # Adresse IP ou FQDN du Wazuh Manager.
 wazuh_manager_address: "wazuh-manager.atlos.local"

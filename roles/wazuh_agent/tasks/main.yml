@@ -21,44 +21,13 @@
       - "Installation réelle de Wazuh Agent"
 
 # ------------------------------------------------------------------------------
-# 2. Installation des prérequis
+# 2. Téléchargement du package Wazuh Agent
 # ------------------------------------------------------------------------------
-# Installation des paquets nécessaires pour l'installation de Wazuh Agent.
-- name: Installation des prérequis
-  ansible.builtin.apt:
-    name:
-      - curl
-      - gnupg2
-      - apt-transport-https
-    state: present
-    update_cache: yes
-  when:
-    - ansible_os_family == "Debian"
-    - wazuh_agent_enabled | bool
-  become: yes
-
-# ------------------------------------------------------------------------------
-# 3. Création du répertoire keyrings
-# ------------------------------------------------------------------------------
-# Création du répertoire pour stocker les clés GPG.
-- name: Création du répertoire keyrings
-  ansible.builtin.file:
-    path: /usr/share/keyrings
-    state: directory
-    mode: '0755'
-  when:
-    - ansible_os_family == "Debian"
-    - wazuh_agent_enabled | bool
-  become: yes
-
-# ------------------------------------------------------------------------------
-# 4. Téléchargement de la clé GPG Wazuh
-# ------------------------------------------------------------------------------
-# Téléchargement de la clé GPG pour vérifier les paquets Wazuh.
-- name: Téléchargement de la clé GPG Wazuh
+# Téléchargement du package .deb depuis le site officiel Wazuh.
+- name: Téléchargement du package Wazuh Agent
   ansible.builtin.get_url:
-    url: https://packages.wazuh.com/key/GPG-KEY-WAZUH
-    dest: /usr/share/keyrings/wazuh-archive-keyring.gpg
+    url: "https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_{{ wazuh_agent_version }}-1_amd64.deb"
+    dest: /tmp/wazuh-agent.deb
     mode: '0644'
   when:
     - ansible_os_family == "Debian"
@@ -66,90 +35,26 @@
   become: yes
 
 # ------------------------------------------------------------------------------
-# 5. Ajout du dépôt Wazuh (Debian/Ubuntu)
+# 3. Installation de Wazuh Agent avec variables d'environnement
 # ------------------------------------------------------------------------------
-# Ajout du dépôt officiel Wazuh pour l'installation des paquets.
-- name: Ajout du dépôt Wazuh
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/wazuh-archive-keyring.gpg] https://packages.wazuh.com/4.x/apt/ stable main"
-    state: present
-    filename: wazuh
-  when:
-    - ansible_os_family == "Debian"
-    - wazuh_agent_enabled | bool
-  become: yes
-
-# ------------------------------------------------------------------------------
-# 5. Mise à jour du cache APT
-# ------------------------------------------------------------------------------
-# Mise à jour du cache après ajout du dépôt Wazuh.
-- name: Mise à jour du cache APT
+# Installation du package avec les variables WAZUH_MANAGER et WAZUH_AGENT_NAME.
+- name: Installation de Wazuh Agent
   ansible.builtin.apt:
-    update_cache: yes
-  when:
-    - ansible_os_family == "Debian"
-    - wazuh_agent_enabled | bool
-  become: yes
-
-# ------------------------------------------------------------------------------
-# 6. Installation de wazuh-agent
-# ------------------------------------------------------------------------------
-# Installation du paquet wazuh-agent.
-- name: Installation de wazuh-agent
-  ansible.builtin.apt:
-    name: wazuh-agent
+    deb: /tmp/wazuh-agent.deb
     state: present
+  environment:
+    WAZUH_MANAGER: "{{ wazuh_manager_address }}"
+    WAZUH_AGENT_NAME: "{{ inventory_hostname }}"
   when:
     - ansible_os_family == "Debian"
     - wazuh_agent_enabled | bool
   become: yes
 
 # ------------------------------------------------------------------------------
-# 7. Configuration de l'agent Wazuh
-# ------------------------------------------------------------------------------
-# Configuration de l'agent avec l'adresse du Wazuh Manager.
-# Utilisation de la commande varnish pour configurer l'agent.
-- name: Configuration de l'agent Wazuh
-  ansible.builtin.command:
-    cmd: /var/ossec/bin/wazuh-control register {{ wazuh_manager_address }} {{ wazuh_manager_port }}
-  when:
-    - wazuh_agent_enabled | bool
-  become: yes
-  ignore_errors: yes
-  register: wazuh_register
-
-# ------------------------------------------------------------------------------
-# 8. Modification de la configuration ossec.conf
-# ------------------------------------------------------------------------------
-# Configuration de l'adresse du serveur Wazuh Manager dans ossec.conf.
-- name: Configuration de l'adresse du serveur dans ossec.conf
-  ansible.builtin.lineinfile:
-    path: /var/ossec/etc/ossec.conf
-    regexp: '<address>.*</address>'
-    line: '<address>{{ wazuh_manager_address }}</address>'
-  when:
-    - wazuh_agent_enabled | bool
-  become: yes
-  notify: Redémarrer wazuh-agent
-
-# ------------------------------------------------------------------------------
-# 9. Modification du port dans ossec.conf
-# ------------------------------------------------------------------------------
-# Configuration du port du serveur Wazuh Manager dans ossec.conf.
-- name: Configuration du port dans ossec.conf
-  ansible.builtin.lineinfile:
-    path: /var/ossec/etc/ossec.conf
-    regexp: '<port>.*</port>'
-    line: '<port>{{ wazuh_manager_port }}</port>'
-  when:
-    - wazuh_agent_enabled | bool
-  become: yes
-  notify: Redémarrer wazuh-agent
-
-# ------------------------------------------------------------------------------
-# 10. Démarrage et activation du service Wazuh Agent
+# 4. Démarrage et activation du service Wazuh Agent
 # ------------------------------------------------------------------------------
 # Démarrage du service wazuh-agent et activation au démarrage.
+# L'installation avec les variables d'environnement configure automatiquement l'agent.
 - name: Démarrage et activation du service Wazuh Agent
   ansible.builtin.service:
     name: "{{ wazuh_agent_service_name }}"
@@ -160,7 +65,7 @@
   become: yes
 
 # ------------------------------------------------------------------------------
-# 11. Vérification du statut du service
+# 5. Vérification du statut du service
 # ------------------------------------------------------------------------------
 # Vérification que le service wazuh-agent est bien démarré.
 - name: Vérification du statut du service Wazuh Agent
@@ -173,14 +78,13 @@
   changed_when: false
 
 # ------------------------------------------------------------------------------
-# 12. Affichage du résumé
+# 6. Affichage du résumé
 # ------------------------------------------------------------------------------
 # Cette tâche affiche un résumé de la configuration appliquée.
 - name: Affichage du résumé de configuration
   ansible.builtin.debug:
     msg:
       - "Rôle wazuh_agent appliqué (installation réelle)"
-      - "Manager Wazuh : {{ wazuh_manager_address }}:{{ wazuh_manager_port }}"
+      - "Manager Wazuh : {{ wazuh_manager_address }}"
       - "Service wazuh-agent : {{ wazuh_agent_service_state }}"
-      - "Agent enregistré : {{ wazuh_register.rc == 0 }}"
       - "Pour vérifier l'inscription : https://{{ wazuh_manager_address }}"
