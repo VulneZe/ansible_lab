@@ -66,3 +66,12 @@ simulation_environment_vars:
 # En staging/simulation, nous pourrions vouloir restaurer
 # la machine à un état propre après chaque test.
 simulation_auto_restore: false
+
+# ------------------------------------------------------------------------------
+# Configuration Wazuh Agent pour staging
+# ------------------------------------------------------------------------------
+# Adresse IP du Wazuh Manager pour l'environnement staging.
+wazuh_manager_address: "172.20.10.4"
+
+# Port de communication avec le Wazuh Manager.
+wazuh_manager_port: 1514

@@ -93,3 +93,12 @@ selinux_mode: enforcing  # Ou permissive selon la politique de sécurité
 # Configuration AppArmor
 # ------------------------------------------------------------------------------
 apparmor_enabled: true
+
+# ------------------------------------------------------------------------------
+# Configuration Wazuh Agent pour prod
+# ------------------------------------------------------------------------------
+# Adresse IP du Wazuh Manager pour l'environnement prod.
+wazuh_manager_address: "172.20.10.4"
+
+# Port de communication avec le Wazuh Manager.
+wazuh_manager_port: 1514

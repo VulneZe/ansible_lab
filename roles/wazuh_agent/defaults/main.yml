@@ -3,30 +3,23 @@
 # Entreprise : ATLOS
 # ==============================================================================
 #
-# IMPORTANT : Ce rôle est une SIMULATION PÉDAGOGIQUE.
-# Une installation réelle de Wazuh Agent nécessite l'ajout des dépôts Wazuh,
-# l'installation des paquets spécifiques, la configuration de l'agent,
-# l'enregistrement auprès du manager, etc.
+# Ce rôle installe et configure l'agent Wazuh sur les serveurs Linux.
+# Installation réelle pour Debian/Ubuntu (incluant Kali Linux).
 #
-# Pour une installation réelle en production, consultez la documentation officielle :
+# Documentation officielle :
 # https://documentation.wazuh.com/current/deployment-options/deploy-wazuh-agent/index.html
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# Configuration de la simulation
+# Configuration de l'agent
 # ------------------------------------------------------------------------------
 # Activer ou désactiver le rôle wazuh_agent.
 wazuh_agent_enabled: true
 
-# Mode d'exécution : simulation ou real.
-# simulation : Installe des paquets de base et crée une configuration exemple.
-# real : Effectue une installation réelle de Wazuh Agent (nécessite adaptation).
-wazuh_agent_mode: simulation
-
 # ------------------------------------------------------------------------------
-# Configuration Wazuh Agent (simulation)
+# Configuration Wazuh Agent
 # ------------------------------------------------------------------------------
-# Version de Wazuh Agent (simulation).
+# Version de Wazuh Agent.
 wazuh_agent_version: "4.7.0"
 
 # Adresse IP ou FQDN du Wazuh Manager.
@@ -43,17 +36,7 @@ wazuh_registration_mode: "auto"
 wazuh_registration_password: "{{ vault_wazuh_registration_password | default('') }}"
 
 # ------------------------------------------------------------------------------
-# Paquets à installer (simulation)
-# ------------------------------------------------------------------------------
-# Liste des paquets à installer pour la simulation.
-# En mode real, ces paquets seraient remplacés par les paquets Wazuh réels.
-wazuh_agent_simulation_packages:
-  - curl
-  - wget
-  - gnupg2
-
-# ------------------------------------------------------------------------------
-# Configuration de l'agent (simulation)
+# Configuration de l'agent
 # ------------------------------------------------------------------------------
 # Chemin du fichier de configuration de l'agent.
 wazuh_agent_config_file: "/var/ossec/etc/ossec.conf"
@@ -80,7 +63,7 @@ wazuh_agent_service_state: started
 wazuh_agent_service_enabled: true
 
 # ------------------------------------------------------------------------------
-# Configuration des logs (simulation)
+# Configuration des logs
 # ------------------------------------------------------------------------------
 # Répertoire où l'agent stocke ses logs.
 wazuh_agent_log_dir: "/var/ossec/logs"
@@ -89,7 +72,7 @@ wazuh_agent_log_dir: "/var/ossec/logs"
 wazuh_agent_log_level: "info"
 
 # ------------------------------------------------------------------------------
-# Configuration de la surveillance (simulation)
+# Configuration de la surveillance
 # ------------------------------------------------------------------------------
 # Activer la surveillance des fichiers.
 wazuh_agent_file_monitoring_enabled: true
