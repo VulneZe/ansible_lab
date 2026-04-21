@@ -2,7 +2,7 @@
 
 Projet Ansible complet, propre et pédagogique pour l'entreprise fictive **ATLOS**. Ce projet est conçu pour l'apprentissage d'Ansible tout en respectant les bonnes pratiques d'entreprise.
 
-## 📋 Table des matières
+##  Table des matières
 
 - [Présentation du projet](#présentation-du-projet)
 - [Architecture du lab](#architecture-du-lab)
